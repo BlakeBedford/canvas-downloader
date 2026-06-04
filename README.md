@@ -2,52 +2,16 @@
 
 A command-line tool to download and organize all your Canvas course materials—files, syllabi, pages, modules, assignments, discussions, and announcements—into a clean local folder structure. Made in async Rust⚡.
 
-This is a maintained fork of [this project](https://github.com/bnjmnt4n/canvas-downloader). Also shout out to [this previous fork](https://github.com/rhgndf/canvas-downloader) that implements downloading additional materials.
+This repository is a maintained fork of [Blake Bedford's canvas-downloader fork](https://github.com/BlakeBedford/canvas-downloader), which itself is based on the original [bnjmnt4n/canvas-downloader](https://github.com/bnjmnt4n/canvas-downloader).
 
-## Installation
+## Build From Source
 
-#### 🍺 Homebrew (macOS/Linux) <a href="https://repology.org/project/canvas-downloader/versions"> <img src="https://repology.org/badge/vertical-allrepos/canvas-downloader.svg" alt="Packaging status" align="right"> </a>
-
-```bash
-brew install aik2mlj/tap/canvas-downloader
-```
-
-#### 📦 AUR (Arch Linux)
+This fork is intended to be built from source.
 
 ```bash
-# use pre-built binary
-paru -S canvas-downloader-bin
-# or if you prefer, compile from source
-paru -S canvas-downloader
-```
-
-#### 🍦 Scoop (Windows)
-
-```powershell
-scoop bucket add aik2mlj https://github.com/aik2mlj/scoop-bucket; scoop install aik2mlj/canvas-downloader
-```
-
-#### 🛠️ Cargo (All platforms)
-
-```bash
-# use pre-built binary
-# you need to have cargo-binstall installed first
-cargo binstall canvas-downloader
-# or compile from source
-cargo install canvas-downloader
-```
-
-#### ⬇️ Download from Releases (All platforms)
-
-- Download the corresponding binary archive from [Releases](https://github.com/aik2mlj/canvas-downloader/releases)
-- Decompress the archive file
-- Directly run the executable from terminal, or move it to `$PATH` for easier access
-
-For macOS, the following commands may be needed because the binary isn't signed with an Apple developer account. Also see [Apple's official doc](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac?utm_source=chatgpt.com) on this.
-
-```bash
-# Remove quarantine attribute
-xattr -d com.apple.quarantine canvas-downloader
+git clone https://github.com/BlakeBedford/canvas-downloader.git
+cd canvas-downloader
+cargo build --release
 ```
 
 ## Quick Start
@@ -112,6 +76,14 @@ $ canvas-downloader -t 115 -c CS1101S
 The tool will show you all files to be downloaded with their sizes, then ask for confirmation before proceeding. Downloads are organized by course, preserving Canvas's folder structure.
 
 > **Note:** Course name matching is exact match - use the exact course code (e.g., "CS1101S") or the exact course name as shown in the discovery step.
+
+## Recent Fixes
+
+- Canvas module `Quiz` items are now handled as local `.url` shortcuts instead of being logged as unsupported.
+- Canvas pagination no longer duplicates query parameters across requests or panics when a `current` link relation is missing.
+- Shared Canvas API requests now retry transient failures and use a longer per-attempt timeout for slower endpoints.
+- Configured Canvas base URLs are normalized before requests are built, preventing malformed `//api/...` paths.
+- Panopto downloads now fail gracefully when a playlist has no variants or no segments instead of aborting the run.
 
 ## What Gets Downloaded
 
